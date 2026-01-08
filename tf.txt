@@ -1,0 +1,188 @@
+   xxx = optional(string) 
+
+
+
+##### Configure Interfaces#####
+### SVI Interface  ###
+resource "nxos_svi_interface" "SVI-1101-switch1a" {
+  provider = nxos.switch1a
+  interface_id = "vlan1101"
+  admin_state  = "up"
+  description  = "My Description"
+  mtu          = 9216
+}
+
+resource "nxos_svi_interface_vrf" "svi-1101-VRF-switch1a" {
+  provider = nxos.switch1a
+  interface_id = "vlan1101"
+  vrf_dn       = "sys/inst-xx01_es_core"
+}
+### Add IP to SVI ###
+resource "nxos_ipv4_vrf" "svi-vrf-switch1a" {
+  provider = nxos.switch1a
+  name = "xx01_es_core"
+}
+resource "nxos_ipv4_interface" "svi-1101-ipv4-switch1a" {
+  provider = nxos.switch1a
+  vrf          = "xx01_es_core"
+  interface_id = "vlan1101"
+}
+resource "nxos_ipv4_interface_address" "svi-1100-ip_address-switch1a" {
+  provider = nxos.switch1a 
+  vrf          = "xx01_es_core"
+  interface_id = "vlan1101"
+  address      = "10.66.1.1/28"
+}
+
+### Access interface
+
+resource "nxos_physical_interface" "e1-11-access-int-switch1a" {
+  provider = nxos.switch1a
+  interface_id          = "eth1/11"
+  admin_state           = "up"
+  mode                  = "access"
+  access_vlan           = "vlan-1101"
+  description           = "### Access Interface ###"
+  layer                 = "Layer2"  
+}
+resource "nxos_spanning_tree_interface" "e1-11-access-spt-switch1a" {
+  provider = nxos.switch1a 
+  interface_id = "eth1/11"
+  admin_state  = "enabled"
+  bpdu_guard   = "enable"
+  mode         = "edge"
+
+}
+
+### Trunk interface
+
+resource "nxos_physical_interface" "e1-12-trunk-int-switch1a" {
+  provider = nxos.switch1a
+  interface_id          = "eth1/12"
+  admin_state           = "up"
+  mode                  = "trunk"
+  trunk_vlans           = "10-20,1101"
+  description           = "### Trunk Interface###"
+  layer                 = "Layer2"  
+}
+resource "nxos_spanning_tree_interface" "e1-12-trunk-spt-switch1a" {
+  provider = nxos.switch1a 
+  interface_id = "eth1/12"
+  admin_state  = "enabled"
+  bpdu_guard   = "enable"
+  mode         = "trunk"
+
+}
+
+##### Create TEST VRF #####
+resource "nxos_vrf" "vrf-test-vrf-switch1a" {
+  provider = nxos.switch1a
+### var.vrf-test1 is defined in vars and als from root module  
+  for_each = toset(var.vrf-test1)
+  name = each.value
+}
+
+##### Configure Test VLANs #####
+resource "nxos_bridge_domain" "vrf-test-vlan-switch1a" {
+  provider = nxos.switch1a
+  for_each = {for k, v in var.vlan_map : k => v}
+  fabric_encap = "vlan-${each.value.fabric_encap}"
+  name         = "${each.value.name}"
+}
+
+##### Add static route#####
+resource "nxos_ipv4_static_route" "SR-for-bgp-switch1a" {
+  provider = nxos.switch1a 
+  vrf_name = "xx01_es_core"
+  prefix   = "10.66.127.4/32"
+  next_hops = [{
+    interface_id = "po2.3010"
+    address      = "10.66.125.11"
+    vrf_name     = "xx01_es_core"
+  }]
+}
+
+##### Add BGP Routing to AGG02 #####
+#####Set up Router BGP #####
+
+resource "nxos_bgp" "router_bgp-switch1a" {
+  provider = nxos.switch1a
+  admin_state = "enabled"
+}
+
+resource "nxos_bgp_instance" "router_bgp_instance-switch1a" {
+  provider                = nxos.switch1a
+  admin_state             = "enabled"
+  asn                     = "65292"
+}
+
+resource "nxos_bgp_vrf" "router-bgp-vrf-switch1a" {
+  provider = nxos.switch1a
+  asn       = "65292"
+  name      = "xx01_es_core"
+  router_id = "10.66.127.3"
+}
+
+##### Add Router BGP Address Family #####
+resource "nxos_bgp_address_family" "router-bgp-AF-switch1a" {
+  provider = nxos.switch1a
+  asn                                    = "65292"
+  vrf                                    = "xx01_es_core"
+  address_family                         = "ipv4-ucast"
+  }
+  resource "nxos_bgp_advertised_prefix" "router-bgp-prefix-switch1a" {
+  provider = nxos.switch1a
+  asn            = "65292"
+  vrf            = "xx01_es_core"
+  address_family = "ipv4-ucast"
+  prefix         = "10.66.127.3/32"
+}
+
+##### Add Peer Template #####
+ resource "nxos_bgp_peer_template" "pt-ibgp-baseline-switch1a" {
+  provider = nxos.switch1a
+  asn              = "65292"
+  template_name    = "ibgp-baseline"
+  remote_asn       = "65292"
+}
+resource "nxos_bgp_peer_template_address_family" "pt-ibgp-baseline-AF-switch1a" {
+  provider = nxos.switch1a
+  asn                     = "65292"
+  template_name           = "ibgp-baseline"
+  address_family          = "ipv4-ucast"
+  send_community_extended = "enabled"
+  send_community_standard = "enabled"
+}
+
+resource "nxos_rest" "test-bgp-pt-peercont-switch1a" {
+  provider = nxos.switch1a
+  dn = "sys/bgp/inst/dom-[default]/peercont-[ibgp-baseline]"
+  class_name = "bgpPeerCont"
+  content = {
+    "holdIntvl": "30",
+    "kaIntvl": "10",
+    #"password": "password1234"
+
+  }
+}
+
+resource "nxos_rest" "test-bgp-pt-peeraf-switch1a" {
+  provider = nxos.switch1a
+  dn = "sys/bgp/inst/dom-[default]/peercont-[ibgp-baseline]/af-[ipv4-ucast]"
+  class_name = "bgpPeerAf"
+  content = {
+    "ctrl": "nh-self,rr-client",
+    "softReconfigBackup": "inbound"
+  }
+}
+
+##### Add BGP Peer #####
+resource "nxos_bgp_peer" "bgp-peer-AGG02-switch1a" {
+  provider = nxos.switch1a
+  asn               = "65292"
+  vrf               = "xx01_es_core"
+  address           = "10.66.127.4"
+  description       = "TF-BGP-TO-AGG02"
+  peer_template     = "ibgp-baseline"
+  source_interface  = "lo0"
+}
