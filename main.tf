@@ -116,6 +116,17 @@ module "config-vpc" {
   provider-url-agg01 = var.provider-url-agg01
   provider-url-agg02 = var.provider-url-agg02
 }
+
+module "config-static-route" {
+  source = "./modules/routing"
+  provider-username = var.provider-username
+  provider-userpass = var.provider-userpass
+  provider-url-agg01 = var.provider-url-agg01
+  provider-url-agg02 = var.provider-url-agg02
+  static-routes_map = var.static-routes_map
+  bgp_map = var.bgp_map
+}
+
 ################## END Of MODULES ###############
 
 ##### Return Data from Switches #####

@@ -211,6 +211,60 @@ ipv4_int_address_map-agg02 = {
     },
 }
 
+static-routes_map = {
+    "po2_3010" = {
+        vrf_name = "xx01_es_core"
+        prefix-agg02   = "10.66.127.4/32"
+        prefix-agg01 = "10.66.127.3/32"
+        interface_id = "po2.3010"
+        nh-address-agg01-agg02      = "10.66.125.11"
+        nh-address-agg02-agg01 = "10.66.125.10"
+  }
+}
+
+bgp_map = {
+    "agg01" = {
+        admin_state = "enabled"
+        local-asn   = "65292"
+        vrf-name = "xx01_es_core"
+        router_id-agg01 = "10.66.127.3"
+        router_id-agg02 = "10.66.127.4"
+        address_family = "ipv4-ucast"
+        prefix-agg01 = "10.66.127.3/32"
+        prefix-agg02 = "10.66.127.4/32"
+        template_name = "ibgp-baseline"
+        remote-asn = "65292"
+        send-comm-extended = "enabled"
+        send-comm-standard = "enabled"
+        description = "TF-BGP-TO-AGG02"
+        peer_template = "ibgp-baseline"
+        peer-address-agg01-02 = "10.66.127.4"
+        peer-address-agg02-01 = "10.66.127.3"
+        peer-description = "TF-BGP-TO-AGG02"
+        source_interface = "lo101" 
+  },
+    "agg02" = {
+        admin_state = "enabled"
+        local-asn   = "65292"
+        vrf-name = "xx01_es_core"
+        router_id-agg01 = "10.66.127.3"
+        router_id-agg02 = "10.66.127.4"
+        address_family = "ipv4-ucast"
+        prefix-agg01 = "10.66.127.3/32"
+        prefix-agg02 = "10.66.127.4/32"
+        template_name = "ibgp-baseline"
+        remote-asn = "65292"
+        send-comm-extended = "enabled"
+        send-comm-standard = "enabled"
+        description = "TF-BGP-TO-AGG02"
+        peer_template = "ibgp-baseline"
+        peer-address-agg01-02 = "10.66.127.4"
+        peer-address-agg02-01 = "10.66.127.3"
+        peer-description = "TF-BGP-TO-AGG02"
+        source_interface = "lo101" 
+  },
+}
+
 ###### END OF VARS #####
 
 ##### STATIC VARS CAUTION BEFORE CHANGING #####

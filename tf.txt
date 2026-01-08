@@ -90,17 +90,7 @@ resource "nxos_bridge_domain" "vrf-test-vlan-switch1a" {
   name         = "${each.value.name}"
 }
 
-##### Add static route#####
-resource "nxos_ipv4_static_route" "SR-for-bgp-switch1a" {
-  provider = nxos.switch1a 
-  vrf_name = "xx01_es_core"
-  prefix   = "10.66.127.4/32"
-  next_hops = [{
-    interface_id = "po2.3010"
-    address      = "10.66.125.11"
-    vrf_name     = "xx01_es_core"
-  }]
-}
+
 
 ##### Add BGP Routing to AGG02 #####
 #####Set up Router BGP #####
