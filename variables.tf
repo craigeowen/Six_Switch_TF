@@ -1,3 +1,13 @@
+variable "nxos_connection" {
+  type = object({
+    username = string
+    password = string
+    url_agg01 = string
+    url_agg02 = string
+  })
+}
+
+
 variable "provider-username" {
   type = string
   }
@@ -27,6 +37,12 @@ variable "provider-url-agg02" {
 ### It is not mandatroy to define a default action here  
 }
 
+variable "ipv4_vrf_map" {
+ type = map(object({
+   name = string
+ }))
+}
+
 variable "vlan_map" {
  type = map(object({
    fabric_encap = string
@@ -44,7 +60,23 @@ variable "l2_int_map" {
    layer = optional(string)
  }))
 }
-  
+
+variable "svi_int_map" {
+ type = map(object({
+   interface_id = string
+   admin_state   = optional(string)
+   description = optional(string)
+   mtu = optional(number)
+ }))
+}
+
+variable "svi_int_vrf_map" {
+ type = map(object({
+   interface_id = string
+   vrf_dn = string
+ }))
+} 
+
 variable "po_int_map" {
  type = map(object({
    interface_id = string
@@ -170,3 +202,10 @@ variable "bgp_map" {
    source_interface = string
  }))
 }
+
+variable "acl-map" {
+  type = map(object({
+    name = string
+  }))
+
+} 

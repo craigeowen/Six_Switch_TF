@@ -21,6 +21,21 @@ provider "nxos" {
 
 ##### Config #####
 
+##### IPv4 vrf #####
+
+resource "nxos_ipv4_vrf" "ipv4-vrf-agg01" {
+  provider = nxos.twe-agg01
+  for_each     = {for k, v in var.ipv4_vrf_map : k => v}  
+  name = "${each.value.name}"
+}
+resource "nxos_ipv4_vrf" "ipv4-vrf-agg02" {
+  provider = nxos.twe-agg02
+  for_each     = {for k, v in var.ipv4_vrf_map : k => v}  
+  name = "${each.value.name}"
+}
+
+##### END OF IPv4 vrf #####
+
 ##### loopback IPv4 Int Address #####
 # AGG01
 resource "nxos_ipv4_interface" "ipv4-int-lo101-agg01" {

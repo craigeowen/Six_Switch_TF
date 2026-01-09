@@ -43,3 +43,9 @@ variable "ipv4_int_address_map-agg02" {
    address = string
  }))
 }
+
+variable "ipv4_vrf_map" {
+ type = map(object({
+   name = string
+ }))
+}

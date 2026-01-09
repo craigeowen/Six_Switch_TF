@@ -3,36 +3,7 @@
 
 
 ##### Configure Interfaces#####
-### SVI Interface  ###
-resource "nxos_svi_interface" "SVI-1101-switch1a" {
-  provider = nxos.switch1a
-  interface_id = "vlan1101"
-  admin_state  = "up"
-  description  = "My Description"
-  mtu          = 9216
-}
 
-resource "nxos_svi_interface_vrf" "svi-1101-VRF-switch1a" {
-  provider = nxos.switch1a
-  interface_id = "vlan1101"
-  vrf_dn       = "sys/inst-xx01_es_core"
-}
-### Add IP to SVI ###
-resource "nxos_ipv4_vrf" "svi-vrf-switch1a" {
-  provider = nxos.switch1a
-  name = "xx01_es_core"
-}
-resource "nxos_ipv4_interface" "svi-1101-ipv4-switch1a" {
-  provider = nxos.switch1a
-  vrf          = "xx01_es_core"
-  interface_id = "vlan1101"
-}
-resource "nxos_ipv4_interface_address" "svi-1100-ip_address-switch1a" {
-  provider = nxos.switch1a 
-  vrf          = "xx01_es_core"
-  interface_id = "vlan1101"
-  address      = "10.66.1.1/28"
-}
 
 ### Access interface
 

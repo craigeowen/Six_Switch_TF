@@ -37,7 +37,13 @@ loopback-vrf_map = {
   },
   
 }
-
+#
+ipv4_vrf_map = {
+  "xx01_es_core" = {
+  name = "xx01_es_core"
+  },
+  
+}
 #
 l2_int_map = {
   "eth1_7" = {
@@ -55,6 +61,24 @@ l2_int_map = {
     trunk_vlans           = "1-4094"
     description           = "### vPC peer-link ###"
     layer                 = "Layer2"
+  },
+
+}
+
+svi_int_map = {
+  "vlan1101" = {
+    interface_id          = "vlan1101"
+    admin_state           = "up"
+    description           = "###SDWAN & CTN Handoff###"
+    mtu                   = 9216
+  },
+
+}
+
+svi_int_vrf_map = {
+  "vlan1101" = {
+    interface_id          = "vlan1101"
+    vrf_dn                = "sys/inst-xx01_es_core"
   },
 
 }
@@ -157,7 +181,11 @@ ipv4_int_map-agg01 = {
     "po2_3010" = {
         vrf = "xx01_es_core"
         interface_id = "po2.3010"
-    },    
+    },
+    "vlan1101" = {
+        vrf = "xx01_es_core"
+        interface_id = "vlan1101"
+    },        
 }
 
 ipv4_int_address_map-agg01 = {
@@ -175,7 +203,12 @@ ipv4_int_address_map-agg01 = {
         vrf = "xx01_es_core"
         interface_id = "po2.3010"
         address = "10.66.125.10/31"
-    },    
+    }, 
+    "vlan1101" = {
+        vrf = "xx01_es_core"
+        interface_id = "vlan1101"
+        address = "10.66.1.1/28"
+    },       
 }
 
 ipv4_int_map-agg02 = {
@@ -277,3 +310,18 @@ hostname-agg02 = "Dev-Test-AGG02"
 #
 vrf-names = ["vpc", "xx01_es_core"]
 #
+acl-map = {
+   "50" = {
+    name = "50"
+    },
+   "71" = {
+    name = "71"
+   },
+}
+#
+nxos_connection = {
+  username = "cisco"
+  password = "cisco"
+  url_agg01 = "https://192.168.1.123"
+  url_agg02 = "https://192.168.1.190"
+}

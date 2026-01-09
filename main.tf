@@ -73,6 +73,17 @@ module "config-eth-int" {
   l2_int_map = var.l2_int_map
 }
 
+##### Configure  SVI #####
+module "config-svi" {
+  source = "./modules/svi"
+  provider-username = var.provider-username
+  provider-userpass = var.provider-userpass
+  provider-url-agg01 = var.provider-url-agg01
+  provider-url-agg02 = var.provider-url-agg02
+  svi_int_map = var.svi_int_map
+  svi_int_vrf_map = var.svi_int_vrf_map
+}
+
 ##### Configure  po-Int #####
 module "config-po-int" {
   source = "./modules/port-channels"
@@ -107,6 +118,7 @@ module "config-ipv4-int-address" {
   ipv4_int_map-agg02 = var.ipv4_int_map-agg02
   ipv4_int_address_map-agg01 = var.ipv4_int_address_map-agg01
   ipv4_int_address_map-agg02 = var.ipv4_int_address_map-agg02
+  ipv4_vrf_map = var.ipv4_vrf_map
 }
 
 module "config-vpc" {
@@ -125,6 +137,16 @@ module "config-static-route" {
   provider-url-agg02 = var.provider-url-agg02
   static-routes_map = var.static-routes_map
   bgp_map = var.bgp_map
+}
+
+##### configure acl #####
+module "config-twe-acl" {
+  source = "./modules/acl"
+  provider-username = var.provider-username
+  provider-userpass = var.provider-userpass
+  provider-url-agg01 = var.provider-url-agg01
+  provider-url-agg02 = var.provider-url-agg02
+  acl-map = var.acl-map
 }
 
 ################## END Of MODULES ###############
