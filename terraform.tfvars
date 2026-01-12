@@ -298,6 +298,58 @@ bgp_map = {
   },
 }
 
+acl-map = {
+   "50" = {
+    name = "50"
+    },
+   "71" = {
+    name = "71"
+   },
+}
+
+acl-entry-map = {
+   "50-1" = {
+    name                      = "50"
+    sequence_number           = 1
+    remark                    = "------- VTY ACL -------"
+    },
+    "50-10" = {
+    name                      = "50"
+    sequence_number           = 10
+    action                    = "permit"
+    source_prefix        = "10.24.34.127"
+    source_prefix_length = "32"
+    destination_prefix = "0.0.0.0"
+    destination_prefix_mask = "0.0.0.0"
+    protocol                  = "ip"
+    },
+    "50-15" = {
+    name                      = "50"
+    sequence_number           = 15
+    action                    = "permit"
+    source_prefix        = "10.223.32.44"
+    source_prefix_length = "32"
+    destination_prefix = "0.0.0.0"
+    destination_prefix_mask = "0.0.0.0"
+    protocol                  = "ip"
+    },    
+     "71-1" = {
+    name                      = "71"
+    sequence_number           = 1
+    remark                    = "------- SNMP ACL -------"
+    },
+    "71-55" = {
+    name                      = "71"
+    sequence_number           = 55
+    action                    = "permit"
+    source_prefix             = "10.221.16.0"
+    source_prefix_length      = "24"    
+    destination_prefix        = "10.24.114.1"
+    destination_prefix_length = "32"
+    protocol                  = "ip"
+    }, 
+}
+
 ###### END OF VARS #####
 
 ##### STATIC VARS CAUTION BEFORE CHANGING #####
@@ -310,14 +362,7 @@ hostname-agg02 = "Dev-Test-AGG02"
 #
 vrf-names = ["vpc", "xx01_es_core"]
 #
-acl-map = {
-   "50" = {
-    name = "50"
-    },
-   "71" = {
-    name = "71"
-   },
-}
+
 #
 nxos_connection = {
   username = "cisco"

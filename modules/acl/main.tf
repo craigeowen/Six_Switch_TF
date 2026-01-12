@@ -23,16 +23,48 @@ provider "nxos" {
 
 ##### ACL#####
 
-resource "nxos_ipv4_access_list" "acl-50-agg01" {
+resource "nxos_ipv4_access_list" "acl-agg01" {
   provider = nxos.twe-agg01 
   for_each = {for k, v in var.acl-map : k => v}
   name     = "${each.value.name}"
 }
 
-resource "nxos_ipv4_access_list" "acl-50-agg02" {
+resource "nxos_ipv4_access_list" "acl-agg02" {
   provider = nxos.twe-agg02
   for_each = {for k, v in var.acl-map : k => v}
   name     = "${each.value.name}"
+}
+
+resource "nxos_ipv4_access_list_entry" "acl-entry-agg01" {
+  provider                  = nxos.twe-agg01
+  for_each                  = {for k, v in var.acl-entry-map : k => v}
+  name                      = "${each.value.name}"
+  sequence_number           = "${each.value.sequence_number}"
+  action                    = "${each.value.action}"
+  destination_prefix        = "${each.value.destination_prefix}"
+  destination_prefix_length = "${each.value.destination_prefix_length}"
+  destination_prefix_mask   = "${each.value.destination_prefix_mask}"
+  protocol                  = "${each.value.protocol}"
+  source_prefix             = "${each.value.source_prefix}"
+  source_prefix_length      = "${each.value.source_prefix_length}"
+  source_prefix_mask        = "${each.value.source_prefix_mask}"
+  remark                    = "${each.value.remark}"
+}
+
+resource "nxos_ipv4_access_list_entry" "acl-entry-agg02" {
+  provider                  = nxos.twe-agg02
+  for_each                  = {for k, v in var.acl-entry-map : k => v}
+  name                      = "${each.value.name}"
+  sequence_number           = "${each.value.sequence_number}"
+  action                    = "${each.value.action}"
+  destination_prefix        = "${each.value.destination_prefix}"
+  destination_prefix_length = "${each.value.destination_prefix_length}"
+  destination_prefix_mask   = "${each.value.destination_prefix_mask}"
+  protocol                  = "${each.value.protocol}"
+  source_prefix             = "${each.value.source_prefix}"
+  source_prefix_length      = "${each.value.source_prefix_length}"
+  source_prefix_mask        = "${each.value.source_prefix_mask}"
+  remark                    = "${each.value.remark}"
 }
 
 ##### End of ACL #####

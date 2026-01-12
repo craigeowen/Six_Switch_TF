@@ -147,6 +147,7 @@ module "config-twe-acl" {
   provider-url-agg01 = var.provider-url-agg01
   provider-url-agg02 = var.provider-url-agg02
   acl-map = var.acl-map
+  acl-entry-map = var.acl-entry-map
 }
 
 ################## END Of MODULES ###############
@@ -164,3 +165,16 @@ data "nxos_system" "system-info-twe-agg02" {
 output "hostname-twe-agg02" {
   value = data.nxos_system.system-info-twe-agg02.name
 }
+
+##### REST API retulrn data
+data "nxos_rest" "l1PhysIf-agg01" {
+  provider = nxos.twe-agg01
+  dn = "sys/intf/phys-[eth1/1]"
+}
+output "l1_phys_int_eth1_1" {
+  value = data.nxos_rest.l1PhysIf-agg01.content.adminSt
+}
+
+##### REST API return data WIP ###
+
+####Try to pass back from module ###
