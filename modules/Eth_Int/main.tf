@@ -136,3 +136,59 @@ resource "nxos_rest" "Configure-eth1_12-po2-twe-agg02" {
     "status": "created,modified"
   }
 }
+
+##### Configure Physical Interface for use by PO111 #####
+
+# resource "nxos_rest" "Configure-eth1_9-po111-agg01" {
+#   provider = nxos.twe-agg01
+#   dn = "sys/intf/phys-[eth1/9]"
+#   class_name = "l1PhysIf"
+#   content = {
+#     "adminSt": "up",
+#     "descr": "link to COREG01 via Port-Channel111",
+#     "layer": "Layer3",
+#     "id": "eth1/9",
+#     "mtu": "9216",
+#     "status": "created,modified"
+#   }
+# }
+# resource "nxos_rest" "Configure-eth1_11-po121-agg01" {
+#   provider = nxos.twe-agg01
+#   dn = "sys/intf/phys-[eth1/11]"
+#   class_name = "l1PhysIf"
+#   content = {
+#     "adminSt": "up",
+#     "descr": "link to TWE-CORE02 via Port-Channel121",
+#     "layer": "Layer3",
+#     "id": "eth1/11",
+#     "mtu": "9216",
+#     "status": "created,modified"
+#   }
+# }
+# #
+# resource "nxos_rest" "Configure-eth1_9-po112-agg02" {
+#   provider = nxos.twe-agg02
+#   dn = "sys/intf/phys-[eth1/9]"
+#   class_name = "l1PhysIf"
+#   content = {
+#     "adminSt": "up",
+#     "descr": "link to CORE01 via Port-Channel112",
+#     "layer": "Layer3",
+#     "id": "eth1/9",
+#     "mtu": "9216",
+#     "status": "created,modified"
+#   }
+# }
+# resource "nxos_rest" "Configure-eth1_11-po122-agg02" {
+#   provider = nxos.twe-agg02
+#   dn = "sys/intf/phys-[eth1/11]"
+#   class_name = "l1PhysIf"
+#   content = {
+#     "adminSt": "up",
+#     "descr": "link to CORE02 via Port-Channel122",
+#     "layer": "Layer3",
+#     "id": "eth1/11",
+#     "mtu": "9216",
+#     "status": "created,modified"
+#   }
+# }

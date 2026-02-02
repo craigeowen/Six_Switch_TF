@@ -6,6 +6,44 @@ terraform {
   }
 }
 
+##### USE YAML INPUT #####
+
+### FIRST CREAT LOCAL BLOCK ###
+locals {
+  yaml_vars = yamldecode(file("./vars.yaml"))
+}
+### THEN MAP VARIABLES FROM LOCAL BLOCK TO TF VARIABLES ###
+# Provider Variables
+# variable "provider-username" {
+#   default = local.yaml_vars.provider.username
+# }
+# variable "provider-userpass" {
+#   default = local.yaml_vars.provider.userpass
+# }
+# variable "provider-url-agg01" {
+#   default = local.yaml_vars.provider.url-agg01
+# }
+# variable "provider-url-agg02" {
+#   default = local.yaml_vars.provider.url-agg02
+# }
+# # Hostname Variables
+# variable "hostname-agg01" {
+#   default = local.yaml_vars.hostname.hostname-agg01
+# }
+# variable "hostname-agg02" {
+#   default = local.yaml_vars.hostname.hostname-agg02
+# }
+
+
+### TEST ON RESOURCE ###
+resource "nxos_ipv4_access_list_policy_ingress_interface" "acl_example" {
+  provider = nxos.twe-agg01
+  interface_id     = local.yaml_vars.acl_interface_id # will creat as a map later
+  access_list_name = local.yaml_vars.acl_acl_name
+}
+
+##### END OF USE YAML INPUT #####
+
 ################## MODULES ###############
 
 ###
@@ -91,11 +129,15 @@ module "config-po-int" {
   provider-userpass = var.provider-userpass
   provider-url-agg01 = var.provider-url-agg01
   provider-url-agg02 = var.provider-url-agg02
-  po_int_map = var.po_int_map
-  po_sub-int_map = var.po_sub-int_map
-  po_sub-int-vrf_map = var.po_sub-int-vrf_map
+  po_int_map-agg01 = var.po_int_map-agg01
+  po_sub-int_map-agg01 = var.po_sub-int_map-agg01
+  po_sub-int-vrf_map-agg01 = var.po_sub-int-vrf_map-agg01
   po_vrf_map = var.po_vrf_map
-  po_member_map = var.po_member_map
+  po_member_map-agg01 = var.po_member_map-agg01
+  po_int_map-agg02 = var.po_int_map-agg02
+  po_sub-int_map-agg02 = var.po_sub-int_map-agg02
+  po_sub-int-vrf_map-agg02 = var.po_sub-int-vrf_map-agg02
+  po_member_map-agg02 = var.po_member_map-agg02 
 }
 
 module "config-loopback-int" {

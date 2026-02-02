@@ -25,7 +25,7 @@ provider "nxos" {
 
 resource "nxos_port_channel_interface" "configure-po-agg01" {
   provider              = nxos.twe-agg01 
-  for_each              = {for k, v in var.po_int_map : k => v}
+  for_each              = {for k, v in var.po_int_map-agg01 : k => v}
   interface_id          = "${each.value.interface_id}"
   port_channel_mode     = "${each.value.port_channel_mode}"
   minimum_links         = lookup(each.value, "minimum_links", null)
@@ -40,7 +40,7 @@ resource "nxos_port_channel_interface" "configure-po-agg01" {
 }
 resource "nxos_port_channel_interface" "configure-po-agg02" {
   provider              = nxos.twe-agg02 
-  for_each              = {for k, v in var.po_int_map : k => v}
+  for_each              = {for k, v in var.po_int_map-agg02 : k => v}
   interface_id          = "${each.value.interface_id}"
   port_channel_mode     = "${each.value.port_channel_mode}"
   minimum_links         = lookup(each.value, "minimum_links", null)
@@ -60,7 +60,7 @@ resource "nxos_port_channel_interface" "configure-po-agg02" {
 
 resource "nxos_subinterface" "po_sub_int_agg01" {
   provider = nxos.twe-agg01
-  for_each              = {for k, v in var.po_sub-int_map : k => v}
+  for_each              = {for k, v in var.po_sub-int_map-agg01 : k => v}
   interface_id = "${each.value.interface_id}"
   admin_state  = "${each.value.admin_state}"
   description  = lookup(each.value, "description", null)
@@ -70,7 +70,7 @@ resource "nxos_subinterface" "po_sub_int_agg01" {
 
 resource "nxos_subinterface" "po_sub_int_agg02" {
   provider = nxos.twe-agg02
-  for_each              = {for k, v in var.po_sub-int_map : k => v}
+  for_each              = {for k, v in var.po_sub-int_map-agg02 : k => v}
   interface_id = "${each.value.interface_id}"
   admin_state  = "${each.value.admin_state}"
   description  = lookup(each.value, "description", null)
@@ -84,14 +84,14 @@ resource "nxos_subinterface" "po_sub_int_agg02" {
 
 resource "nxos_subinterface_vrf" "po_sub_int_vrf_agg01" {
   provider = nxos.twe-agg01
-  for_each              = {for k, v in var.po_sub-int-vrf_map : k => v}  
+  for_each              = {for k, v in var.po_sub-int-vrf_map-agg01 : k => v}  
   interface_id = "${each.value.interface_id}"
   vrf_dn       = "${each.value.vrf_dn}"
 }
 
 resource "nxos_subinterface_vrf" "po_sub_int_vrf_agg02" {
   provider     = nxos.twe-agg02
-  for_each     = {for k, v in var.po_sub-int-vrf_map : k => v}  
+  for_each     = {for k, v in var.po_sub-int-vrf_map-agg02 : k => v}  
   interface_id = "${each.value.interface_id}"
   vrf_dn       = "${each.value.vrf_dn}"
 }
@@ -120,7 +120,7 @@ resource "nxos_subinterface_vrf" "po_sub_int_vrf_agg02" {
 
  resource "nxos_port_channel_interface_member" "po-member_map_agg01" {
    provider = nxos.twe-agg01
-   for_each     = {for k, v in var.po_member_map : k => v} 
+   for_each     = {for k, v in var.po_member_map-agg01 : k => v} 
    interface_id = "${each.value.interface_id}"
    interface_dn = "${each.value.interface_dn}"
    force        = "${each.value.force}"
@@ -128,7 +128,7 @@ resource "nxos_subinterface_vrf" "po_sub_int_vrf_agg02" {
 
   resource "nxos_port_channel_interface_member" "po-int_member_agg02" {
    provider = nxos.twe-agg02
-   for_each     = {for k, v in var.po_member_map : k => v} 
+   for_each     = {for k, v in var.po_member_map-agg02 : k => v} 
    interface_id = "${each.value.interface_id}"
    interface_dn = "${each.value.interface_dn}"
    force        = "${each.value.force}"
@@ -170,6 +170,62 @@ resource "nxos_rest" "Configure-eth1_6-po4-twe-agg02" {
   }
 }
 
+##### Configure Physical Interface for use by PO111 #####
+resource "nxos_rest" "Configure-eth1_9-po111-twe-agg01" {
+  provider = nxos.twe-agg01
+  dn = "sys/intf/phys-[eth1/9]"
+  class_name = "l1PhysIf"
+  content = {
+    "adminSt": "up",
+    "descr": "link to CORE01 via Port-Channel111",
+    "layer": "Layer3",
+    "id": "eth1/9",
+    "mtu": "9216",
+    "status": "created,modified"
+  }
+}
+##### Configure Physical Interface for use by PO121 #####
+resource "nxos_rest" "Configure-eth1_11-po121-twe-agg01" {
+  provider = nxos.twe-agg01
+  dn = "sys/intf/phys-[eth1/11]"
+  class_name = "l1PhysIf"
+  content = {
+    "adminSt": "up",
+    "descr": "link to CORE02 via Port-Channel121",
+    "layer": "Layer3",
+    "id": "eth1/11",
+    "mtu": "9216",
+    "status": "created,modified"
+  }
+}
+##### Configure Physical Interface for use by PO112 #####
+resource "nxos_rest" "Configure-eth1_9-po112-twe-agg02" {
+  provider = nxos.twe-agg02
+  dn = "sys/intf/phys-[eth1/9]"
+  class_name = "l1PhysIf"
+  content = {
+    "adminSt": "up",
+    "descr": "link to CORE01 via Port-Channel112",
+    "layer": "Layer3",
+    "id": "eth1/9",
+    "mtu": "9216",
+    "status": "created,modified"
+  }
+}
+##### Configure Physical Interface for use by PO122 #####
+resource "nxos_rest" "Configure-eth1_11-po121-twe-agg02" {
+  provider = nxos.twe-agg02
+  dn = "sys/intf/phys-[eth1/11]"
+  class_name = "l1PhysIf"
+  content = {
+    "adminSt": "up",
+    "descr": "link to CORE02 via Port-Channel122",
+    "layer": "Layer3",
+    "id": "eth1/11",
+    "mtu": "9216",
+    "status": "created,modified"
+  }
+}
 
 ##### STP on PO1 #####
 

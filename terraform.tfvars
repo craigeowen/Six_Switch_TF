@@ -83,7 +83,7 @@ svi_int_vrf_map = {
 
 }
 
-po_int_map = {
+po_int_map-agg01 = {
    "po1" = {
     interface_id          = "po1"
     port_channel_mode     = "active"
@@ -111,10 +111,74 @@ po_int_map = {
     description           = "### vPC peer-keepalive ###"
     layer                 = "Layer3"
     mtu                   = 9216
-    },    
+    }, 
+   "po111" = {
+    interface_id          = "po111"
+    port_channel_mode     = "active"
+    admin_state           = "up"
+    description           = "### XX-01 AGG to CORE BGP ###"
+    layer                 = "Layer3"
+    mtu                   = 9216
+    },
+   "po121" = {
+    interface_id          = "po121"
+    port_channel_mode     = "active"
+    admin_state           = "up"
+    description           = "### XX-01 AGG to CORE BGP ###"
+    layer                 = "Layer3"
+    mtu                   = 9216
+    },           
 }
 
-po_sub-int_map = {
+
+po_int_map-agg02 = {
+   "po1" = {
+    interface_id          = "po1"
+    port_channel_mode     = "active"
+    minimum_links         = 1
+    suspend_individual    = "disable"
+    admin_state           = "up"
+    mode                  = "trunk"
+    trunk_vlans           = "1-4094"
+    description           = "### vPC peer-link ###"
+    layer                 = "Layer2"
+    },
+   "po2" = {
+    interface_id          = "po2"
+    port_channel_mode     = "active"
+    admin_state           = "up"
+    description           = "### XX-01 AGG to AGG iBGP ###"
+    layer                 = "Layer3"
+    mtu                   = 9216
+    },
+    "po4" = {
+    interface_id          = "po4"
+    port_channel_mode     = "active"
+    minimum_links         = 1
+    admin_state           = "up"
+    description           = "### vPC peer-keepalive ###"
+    layer                 = "Layer3"
+    mtu                   = 9216
+    }, 
+   "po122" = {
+    interface_id          = "po122"
+    port_channel_mode     = "active"
+    admin_state           = "up"
+    description           = "### XX-01 AGG to CORE BGP ###"
+    layer                 = "Layer3"
+    mtu                   = 9216
+    },
+   "po112" = {
+    interface_id          = "po112"
+    port_channel_mode     = "active"
+    admin_state           = "up"
+    description           = "### XX-01 AGG to CORE BGP ###"
+    layer                 = "Layer3"
+    mtu                   = 9216
+    },           
+}
+
+po_sub-int_map-agg01 = {
    "po1" = {
     interface_id = "po2.3010"
     admin_state  = "up"
@@ -122,15 +186,72 @@ po_sub-int_map = {
     mtu          = 9216
     encap = "vlan-3010"
     },
-
+   "po111" = {
+    interface_id = "po111.3010"
+    admin_state  = "up"
+    description  = "### XX-01 AGG to RC BGP ###"
+    mtu          = 9216
+    encap = "vlan-3010"
+    },
+   "po121" = {
+    interface_id = "po121.3010"
+    admin_state  = "up"
+    description  = "### XX-01 RC BGP ###"
+    mtu          = 9216
+    encap = "vlan-3010"
+    },
+}
+po_sub-int_map-agg02 = {
+   "po1" = {
+    interface_id = "po2.3010"
+    admin_state  = "up"
+    description  = "### XX-01 AGG to AGG iBGP ###"
+    mtu          = 9216
+    encap = "vlan-3010"
+    },
+   "po122" = {
+    interface_id = "po122.3010"
+    admin_state  = "up"
+    description  = "### XX-01 AGG to RC BGP ###"
+    mtu          = 9216
+    encap = "vlan-3010"
+    },
+   "po112" = {
+    interface_id = "po112.3010"
+    admin_state  = "up"
+    description  = "### XX-01 RC BGP ###"
+    mtu          = 9216
+    encap = "vlan-3010"
+    },
 }
 
-po_sub-int-vrf_map = {
+po_sub-int-vrf_map-agg01 = {
    "po2" = {
     interface_id = "po2.3010"
     vrf_dn       = "sys/inst-xx01_es_core"
     },
-
+   "po111" = {
+    interface_id = "po111.3010"
+    vrf_dn       = "sys/inst-xx01_es_core"
+    },
+   "po121" = {
+    interface_id = "po121.3010"
+    vrf_dn       = "sys/inst-xx01_es_core"
+    },    
+}
+po_sub-int-vrf_map-agg02 = {
+   "po2" = {
+    interface_id = "po2.3010"
+    vrf_dn       = "sys/inst-xx01_es_core"
+    },
+   "po122" = {
+    interface_id = "po122.3010"
+    vrf_dn       = "sys/inst-xx01_es_core"
+    },
+   "po112" = {
+    interface_id = "po112.3010"
+    vrf_dn       = "sys/inst-xx01_es_core"
+    },    
 }
 
 po_vrf_map = {
@@ -141,7 +262,7 @@ po_vrf_map = {
 
 }
 
-po_member_map = {
+po_member_map-agg01 = {
     "po1-1" = {
       interface_id = "po1"
       interface_dn = "sys/intf/phys-[eth1/7]"
@@ -166,7 +287,56 @@ po_member_map = {
       interface_id = "po4"
       interface_dn = "sys/intf/phys-[eth1/6]"
       force        = false        
+    }, 
+    "po111" = {
+      interface_id = "po111"
+      interface_dn = "sys/intf/phys-[eth1/9]"
+      force        = true        
+    },
+    "po121" = {
+      interface_id = "po121"
+      interface_dn = "sys/intf/phys-[eth1/11]"
+      force        = true        
+    },
+        
+}
+po_member_map-agg02 = {
+    "po1-1" = {
+      interface_id = "po1"
+      interface_dn = "sys/intf/phys-[eth1/7]"
+      force        = true        
+    },
+    "po1-2" = {
+      interface_id = "po1"
+      interface_dn = "sys/intf/phys-[eth1/8]"
+      force        = true        
+    },
+    "po2-1" = {
+      interface_id = "po2"
+      interface_dn = "sys/intf/phys-[eth1/10]"
+      force        = true        
+    },
+    "po2-2" = {
+      interface_id = "po2"
+      interface_dn = "sys/intf/phys-[eth1/12]"
+      force        = true        
     },    
+    "po4" = {
+      interface_id = "po4"
+      interface_dn = "sys/intf/phys-[eth1/6]"
+      force        = false        
+    }, 
+    "po122" = {
+      interface_id = "po122"
+      interface_dn = "sys/intf/phys-[eth1/11]"
+      force        = true        
+    },
+    "po112" = {
+      interface_id = "po112"
+      interface_dn = "sys/intf/phys-[eth1/9]"
+      force        = true        
+    },
+        
 }
 
 ipv4_int_map-agg01 = {
@@ -181,6 +351,14 @@ ipv4_int_map-agg01 = {
     "po2_3010" = {
         vrf = "xx01_es_core"
         interface_id = "po2.3010"
+    },
+    "po111_3010" = {
+        vrf = "xx01_es_core"
+        interface_id = "po111.3010"
+    },
+    "po121_3010" = {
+        vrf = "xx01_es_core"
+        interface_id = "po121.3010"
     },
     "vlan1101" = {
         vrf = "xx01_es_core"
@@ -203,7 +381,17 @@ ipv4_int_address_map-agg01 = {
         vrf = "xx01_es_core"
         interface_id = "po2.3010"
         address = "10.66.125.10/31"
-    }, 
+    },
+    "po111_3010" = {
+        vrf = "xx01_es_core"
+        interface_id = "po111.3010"
+        address = "10.66.125.3/31"
+    },
+    "po121_3010" = {
+        vrf = "xx01_es_core"
+        interface_id = "po121.3010"
+        address = "10.66.125.7/31"
+    },
     "vlan1101" = {
         vrf = "xx01_es_core"
         interface_id = "vlan1101"
@@ -223,7 +411,19 @@ ipv4_int_map-agg02 = {
     "po2_3010" = {
         vrf = "xx01_es_core"
         interface_id = "po2.3010"
+    },
+    "po122_3010" = {
+        vrf = "xx01_es_core"
+        interface_id = "po122.3010"
+    },
+    "po112_3010" = {
+        vrf = "xx01_es_core"
+        interface_id = "po112.3010"
     }, 
+    "vlan1101" = {
+        vrf = "xx01_es_core"
+        interface_id = "vlan1101"
+    },        
 }
 
 ipv4_int_address_map-agg02 = {
@@ -242,6 +442,21 @@ ipv4_int_address_map-agg02 = {
         interface_id = "po2.3010"
         address = "10.66.125.11/31"
     },
+    "po122_3010" = {
+        vrf = "xx01_es_core"
+        interface_id = "po122.3010"
+        address = "10.66.125.9/31"
+    },
+    "po112_3010" = {
+        vrf = "xx01_es_core"
+        interface_id = "po112.3010"
+        address = "10.66.125.5/31 "
+    },
+    "vlan1101" = {
+        vrf = "xx01_es_core"
+        interface_id = "vlan1101"
+        address = "10.66.1.2/28"
+    },    
 }
 
 static-routes_map = {
